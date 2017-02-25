@@ -10,9 +10,15 @@ def function_deriv(x):
 function_vec = np.vectorize(function)
 function_deriv = np.vectorize(function_deriv)
 
-#Hessian Matrix set to Identity Matrix
-B = np.array( [ [1,0],
+#Identity Matrix
+I = np.array( [ [1,0],
                 [0,1] ])
+
+#Hessian Matrix set to Identity Matrix
+B = I
+
+#Hessian Matrix Inverse set to B
+B_inv = B
 
 #Pick initial point x_0
 x_k = np.array([2,1])
@@ -37,3 +43,11 @@ y_k = function_deriv(x_k1) - function_deriv(x_k)
 #Calculate B_k+1
 B_k1 = B + (y_k.dot(y_k.T))/(y_k.T.dot(s_k)) - (B.dot(s_k.dot(s_k.T.dot(B))))/(s_k.T.dot(B.dot(s_k)))
 print B_k1
+#Set new x_k
+x_k = x_k1
+#Compute new B_k inverse
+a = I - (s_k.dot(y_k.T))/(y_k.T.dot(s_k))
+b = I - (y_k.dot(s_k.T))/(y_k.T.dot(s_k))
+B_inv = a.dot(B_inv.dot(b)) + (s_k.dot(s_k.T))/(y_k.T.dot(s_k))
+print B_inv
+print "hi"
