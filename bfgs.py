@@ -24,6 +24,7 @@ B_inv = B
 x_k = np.array([2,1])
 
 for iterations in xrange(5):
+    print "Iteration ", iterations, ": "
     #Obtain a direction p_k by solving B_k*p_k = -function_deriv(x_k)
     p_k =  -B_inv.dot(function_deriv(x_k))
 
@@ -35,21 +36,24 @@ for iterations in xrange(5):
     g = function_deriv(x_k)
     print "g", g
     #Calculate step size alpha
-    alpha_k = -(x_k[0] ** 2 + x_k[1] ** 2)/(g[0] + g[1])
+    alpha_k = -(x_k[0] ** 2 + x_k[1] ** 2)/(g[0] **2 + g[1] ** 2)
     print "alpha_k", alpha_k
     #Set s_k = alpha_k*p_k
     s_k = alpha_k*p_k
+    print "s_k", s_k
     #Set x_k+1 = x_k + alpha_k*p_k
-    x_k1 = x_k + alpha_k*p_k
-    print x_k1
+    x_k1 = x_k - alpha_k*p_k
+    print "x_k" ,x_k,"x_k1", x_k1
     #Set y_k = f'(x_k+1) - f'(x_k)
     y_k = function_deriv(x_k1) - function_deriv(x_k)
+    print "y_k", y_k
     #Calculate B_k+1
-    B_k1 = B + (y_k.dot(y_k.T))/(y_k.T.dot(s_k)) - (B.dot(s_k.dot(s_k.T.dot(B))))/(s_k.T.dot(B.dot(s_k)))
+    B_k1 = B + ((y_k.dot(y_k.T))/(y_k.T.dot(s_k))) - ((B.dot(s_k.dot(s_k.T.dot(B))))/(s_k.T.dot(B.dot(s_k))))
     #Set new x_k
-    print x_k1 - x_k
     x_k = x_k1
     #Compute new B_k inverse
     a = I - (s_k.dot(y_k.T))/(y_k.T.dot(s_k))
     b = I - (y_k.dot(s_k.T))/(y_k.T.dot(s_k))
     B_inv = a.dot(B_inv.dot(b)) + (s_k.dot(s_k.T))/(y_k.T.dot(s_k))
+    B = B_k1
+    print "-------------------------------"
